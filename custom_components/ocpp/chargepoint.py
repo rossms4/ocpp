@@ -536,6 +536,26 @@ class ChargePoint(cp):
             response = msg.create_call_error(e).to_json()
             await self._send(response)
 
+    async def route_message(self, raw_message):
+        try:
+            if isinstance(raw_message, (bytes, bytearray)):
+                raw_message = raw_message.replace(bytes([0]), b"")
+            else:
+                raw_message = raw_message.replace(chr(0), "")
+        except Exception:
+            pass
+        return await super().route_message(raw_message)
+
+    async def _send(self, message):
+        try:
+            if isinstance(message, str):
+                message = message + chr(0)
+            elif isinstance(message, (bytes, bytearray)):
+                message = bytes(message) + bytes([0])
+        except Exception:
+            pass
+        return await super()._send(message)
+
     async def start(self):
         """Start charge point."""
         await self.run([super().start(), self.monitor_connection()])
