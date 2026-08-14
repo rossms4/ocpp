@@ -236,7 +236,7 @@ class ChargePoint(cp):
     ):
         """Instantiate a ChargePoint."""
 
-        super().__init__(id, connection, 10)
+        super().__init__(id, connection, 60)
         if version == OcppVersion.V16:
             self._call = callv16
             self._call_result = call_resultv16
